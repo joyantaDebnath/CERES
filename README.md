@@ -27,7 +27,7 @@ CERES is a high-assurance implementation of X.509 certificate chain validation l
 CERES is realized from the following four logical modules: *Parser*, *Chain-builder*, *Driver*, and *Semantic-checker*. The *Parser* module takes as input the certificate chain to be validated as well as the trusted CA store, and returns the parse trees corresponding to the certificates. The *Chain-builder* module takes these parsed input certificates and forms candidate certificate chains. The *Semantic-checker* module then takes as input the current time, the semantic rules corresponding to the standard in Quantifier-Free First Order Logic, the ASTs corresponding to a candidate certificate chain, and the certificates in the trusted CA store, and then communicates with an "*SMT solver*" to check the assertions enforced by the semantic requirements as well as collect diagnostic information. The *Driver* module does the plumbing needed to combine the *Parser* and the *Semantic-checker* modules. Figure 1 shows the high-level design of CERES.
 
 <p align = "center">
-<img src="https://github.com/joyantaDebnath/CERES/blob/main/ceres-overview.png" width="400" height="430"></p>
+<img src="https://github.com/joyantaDebnath/CERES/blob/master/ceres-overview.png" width="400" height="430"></p>
 <p align = "center">Figure 1- Realization of CERES</p>
 
 ## Setup
