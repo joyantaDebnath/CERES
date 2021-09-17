@@ -133,7 +133,7 @@ In addition, we currently only support *RSA signature* verification. We also do 
 
 ## Acknowledgements
 We are grateful to [*Alan Mislove*](https://mislove.org/) for the initial idea of using measurements to drive our formalization efforts of the X.509 standard. 
-We are also thankful to [*Cesare Tinelli*](https://homepage.cs.uiowa.edu/~tinelli/) for his helpful discussions on attribute grammar and all SMT things. This work was supported by the NSF Grant CNS-2006556.
+We are also thankful to [*Cesare Tinelli*](https://homepage.cs.uiowa.edu/~tinelli/) for his helpful discussions on attribute grammar and all things SMT. This work was supported by the NSF Grant CNS-2006556.
 
 ## License
 Contents of this repository are restricted to non-commercial research purposes only.
