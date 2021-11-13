@@ -1,5 +1,5 @@
 # CERES
-This repository contains the official release of CERES library introduced in the paper titled *[On Re-engineering the X.509 PKI with Executable Specification for Better Implementation Guarantees](https://doi.org/10.1145/3460120.3484793)*[pdf](https://github.com/joyantaDebnath/CERES/blob/master/ccsfp468-debnath.pdf) published in 2021 ACM Conference on Computer and Communications Security (ACM CCS 2021). 
+This repository contains the official release of CERES library introduced in the paper titled *[On Re-engineering the X.509 PKI with Executable Specification for Better Implementation Guarantees](https://github.com/joyantaDebnath/CERES/blob/master/ccsfp468-debnath.pdf)* published in 2021 ACM Conference on Computer and Communications Security (ACM CCS 2021). 
 
 ## Table of Contents
 
