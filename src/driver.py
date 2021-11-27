@@ -131,7 +131,7 @@ parser.add_argument('--dsl-parser', action='store_true',
 parser.add_argument('--version', action='store_true',
                     help='Show current CERES version; default=False')
 parser.add_argument('--asn1parse', action='store_true',
-                    help='Only parse version; default=False')
+                    help='Only parse the input certificates; default=False')
 args = parser.parse_args()
 
 input_chain = args.input
