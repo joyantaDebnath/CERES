@@ -950,16 +950,19 @@ def to_smtlib_init(formulas, logic):
 
 # call LDAP
 def call_stringprep(Value, ValType):
-    if ValType == 30:  # bmpstring
-        Value = bytes(Value).decode('utf-16-be')
-    elif ValType == 19:  # printablestring
-        Value = bytes(Value).decode('us-ascii')
-    elif ValType == 12:  # UTF8String
-        Value = bytes(Value).decode('utf-8')
-    elif ValType == 28:  # universalstring
-        Value = bytes(Value).decode('utf-32-be')
-    elif ValType == 20:  # teletexstring
-        Value = bytes(Value).decode('iso-8859-1')
+    try:
+        if ValType == 30:  # bmpstring
+            Value = bytes(Value).decode('utf-16-be')
+        elif ValType == 19:  # printablestring
+            Value = bytes(Value).decode('us-ascii')
+        elif ValType == 12:  # UTF8String
+            Value = bytes(Value).decode('utf-8')
+        elif ValType == 28:  # universalstring
+            Value = bytes(Value).decode('utf-32-be')
+        elif ValType == 20:  # teletexstring
+            Value = bytes(Value).decode('iso-8859-1')
+    except:
+        return None
 
     stringprep = Popen(
         ["{}/stringprep/runStringPrep".format(extra_location), Value],

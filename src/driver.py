@@ -130,6 +130,8 @@ parser.add_argument('--dsl-parser', action='store_true',
                     help='Enable PG-based parser; default=False')
 parser.add_argument('--version', action='store_true',
                     help='Show current CERES version; default=False')
+parser.add_argument('--asn1parse', action='store_true',
+                    help='Only parse version; default=False')
 args = parser.parse_args()
 
 input_chain = args.input
@@ -140,6 +142,7 @@ input_purposes = args.check_purpose
 input_only_smt = args.check_spec
 temp_parser = args.dsl_parser
 show_version = args.version
+asn1parse = args.asn1parse
 
 if input_chain == None:
     if show_version:
@@ -220,48 +223,51 @@ except AssertionError:
     print(";".join(errors))
     sys.exit(-1)
 
-# pre-process root CA store
-errors, ca_store, ca_list_raw = pre_process_chain_mod(input_CA_store)
-try:
-    assert len(errors) == 0
-    ca_store_certs = [int(ca_store[i], 16) for i in range(0, len(ca_store))]
-    ca_store_certs_sizes = [len(x) for x in ca_store]
-except AssertionError:
-    print("CA store pre-process error...exiting")
-    print(";".join(errors))
-    sys.exit(-1)
+if not asn1parse:
+    # pre-process root CA store
+    errors, ca_store, ca_list_raw = pre_process_chain_mod(input_CA_store)
+    try:
+        assert len(errors) == 0
+        ca_store_certs = [int(ca_store[i], 16) for i in range(0, len(ca_store))]
+        ca_store_certs_sizes = [len(x) for x in ca_store]
+    except AssertionError:
+        print("CA store pre-process error...exiting")
+        print(";".join(errors))
+        sys.exit(-1)
 
 # call parser module
 errors, cert_list_parsed = parser_mod(cert_list_decoded, input_dsl_parser, input_show_chain)
 try:
     assert len(errors) == 0
+    print("Succesfully parsed certificates")
 except AssertionError:
     print("Certificate chain parsing error...exiting")
     print(";".join(errors))
     sys.exit(-1)
 
-# call semantic checker module
-cert_list_parsed_new = []
-for element in cert_list_parsed:
-    if element not in cert_list_parsed_new:
-        cert_list_parsed_new.append(element)
+if not asn1parse:
+    # call semantic checker module
+    cert_list_parsed_new = []
+    for element in cert_list_parsed:
+        if element not in cert_list_parsed_new:
+            cert_list_parsed_new.append(element)
 
-for i in range(0, len(cert_list_parsed_new)):
-    errors, result, unsat_core, proof_check_status = semantic_mod(cert_list_parsed_new[i], input_dsl_parser, input_lfsc,
-                                                                  input_purposes,
-                                                                  ca_store_certs,
-                                                                  ca_store_certs_sizes, input_only_smt, -1)
-    try:
-        assert len(errors) == 0 and result == "sat"
-        print("Certificate chain verification : OK")
-        break
-    except AssertionError:
-        if i == len(cert_list_parsed_new) - 1:
-            print("Certificate chain verification : Falied (Semantic Error)")
-            if len(errors) > 0:
-                print(";".join(errors))
+    for i in range(0, len(cert_list_parsed_new)):
+        errors, result, unsat_core, proof_check_status = semantic_mod(cert_list_parsed_new[i], input_dsl_parser, input_lfsc,
+                                                                      input_purposes,
+                                                                      ca_store_certs,
+                                                                      ca_store_certs_sizes, input_only_smt, -1)
+        try:
+            assert len(errors) == 0 and result == "sat"
+            print("Certificate chain verification : OK")
+            break
+        except AssertionError:
+            if i == len(cert_list_parsed_new) - 1:
+                print("Certificate chain verification : Falied (Semantic Error)")
+                if len(errors) > 0:
+                    print(";".join(errors))
+                else:
+                    print("UNSAT-core : {}; Proof-check-status : {}".format(unsat_core, proof_check_status))
             else:
-                print("UNSAT-core : {}; Proof-check-status : {}".format(unsat_core, proof_check_status))
-        else:
-            pass
-            continue
+                pass
+                continue
