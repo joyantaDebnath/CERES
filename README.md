@@ -1,5 +1,5 @@
 # CERES
-This repository contains the official release of CERES library introduced in the paper titled *[On Re-engineering the X.509 PKI with Executable Specification for Better Implementation Guarantees](https://doi.org/10.1145/3460120.3484793)* published in 2021 ACM Conference on Computer and Communications Security (ACM CCS 2021). 
+This repository contains the official release of CERES library introduced in the paper titled *[On Re-engineering the X.509 PKI with Executable Specification for Better Implementation Guarantees](https://github.com/joyantaDebnath/CERES/blob/master/ccsfp468-debnath.pdf)* published in 2021 ACM Conference on Computer and Communications Security (ACM CCS 2021). 
 
 ## Table of Contents
 
@@ -134,10 +134,10 @@ In addition, we currently only support *RSA signature* verification. We also do 
 
 ## Acknowledgements
 We are grateful to [*Alan Mislove*](https://mislove.org/) for the initial idea of using measurements to drive our formalization efforts of the X.509 standard. 
-We are also thankful to [*Cesare Tinelli*](https://homepage.cs.uiowa.edu/~tinelli/) for his helpful discussions on attribute grammar and all SMT things. This work was supported by the NSF Grant CNS-2006556.
+We are also thankful to [*Cesare Tinelli*](https://homepage.cs.uiowa.edu/~tinelli/) for his helpful discussions on attribute grammar and all things SMT. This work was supported by the NSF Grant CNS-2006556.
 
 ## License
-Contents of this repository are restricted to non-commercial research purposes only.
+This work is licensed under a Creative Commons Attribution International 4.0 License.
 
 ## Citation
 Please, use the following *bibtex* for citing this work.
