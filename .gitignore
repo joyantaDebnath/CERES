@@ -134,3 +134,4 @@ src/bin
 *.spec
 test/differntial-testing/outputs
 test/differntial-testing/build
+.idea/
