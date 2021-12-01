@@ -195,6 +195,7 @@ class Cert_policies:
             f = f[0]
         self.Value = f
 
+
 class CrlIssuer:
     def __init__(self, f):
         self.Value = f
@@ -445,3 +446,13 @@ def UtcTimeMod(f):
         year = 2000 + year
 
     return [year, mon, day, hour, min, sec]
+
+
+class GenericTime:
+    def __init__(self, a, b, c, d, e, f):
+        self.Year = a
+        self.Month = b
+        self.Day = c
+        self.Hour = d
+        self.Minute = e
+        self.Second = f

@@ -77,7 +77,9 @@ Note that, `build-ceres.sh` script automatically downloads and installs all thes
 	--check-spec          check specification consistency
 	--dsl-parser          select "dsl-based" parser instead of "parser-combinator-based" parser
 	--version             show current CERES version
-	--asn1parse           Only parse the input certificates
+	--asn1parse           only parse the input certificates
+	--quick-semantic-check-sc
+                       quick semantic check (no SMT solver) for a single certificate
 	```
 
 * The SMT-Libv2 file used by the *CVC4* SMT solver is saved in `~/.ceres/extras/CVC4/`.

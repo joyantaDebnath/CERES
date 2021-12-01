@@ -8,8 +8,10 @@ from modules.parsers.combinator_based import parser_tbs_raw
 from modules.parsers.combinator_based import parser_x509
 from modules.parsers.dsl_based import parser_x509_dsl
 from modules.semantic import semantic
+from modules.semantic import semantic_quick
 
 current_version = "1.0-11_08_2021"
+
 
 ################################ pre-processor module ############################
 def pre_process_chain_mod(path):
@@ -99,6 +101,7 @@ def semantic_mod(cert_list_parsed, dsl_parser, lfsc, purposes, ca_store, ca_stor
         return errors, None, None, None
     return semantic.call_smt_solver(lfsc)
 
+
 def handle_spec_consistency_check(chain_len):
     errors, result, unsat_core, proof_check_status = semantic_mod([], False, True, [], [], 0, True, chain_len)
     try:
@@ -112,6 +115,7 @@ def handle_spec_consistency_check(chain_len):
             print("Specification is inconsistent")
             print("UNSAT-core : {}; Proof-check-status : {}".format(unsat_core, proof_check_status))
 
+
 ################################ ENTRY POINT #####################################
 # usage: ceres [-h] [--input INPUT] [--ca-store CA_STORE] [--check-purpose CHECK_PURPOSE [CHECK_PURPOSE ...]] [--check-proof] [--show-chain] [--check-spec] [--dsl-parser] [--version]
 parser = argparse.ArgumentParser(description='CERES command-line arguments')
@@ -119,7 +123,9 @@ parser.add_argument('--input', type=str,
                     help='Input chain location')
 parser.add_argument('--ca-store', type=str, default='/etc/ssl/certs/ca-certificates.crt',
                     help='Trusted CA store location; default=/etc/ssl/certs/ca-certificates.crt')
-parser.add_argument('--check-purpose', nargs='+', help='list of expected purposes of End certificate: serverAuth, clientAuth, codeSigning, emailProtection, timeStamping, OCSPSigning, digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment, keyAgreement, keyCertSign, cRLSign, encipherOnly, decipherOnly; default=anyPurpose', default=[])
+parser.add_argument('--check-purpose', nargs='+',
+                    help='list of expected purposes of End certificate: serverAuth, clientAuth, codeSigning, emailProtection, timeStamping, OCSPSigning, digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment, keyAgreement, keyCertSign, cRLSign, encipherOnly, decipherOnly; default=anyPurpose',
+                    default=[])
 parser.add_argument('--check-proof', action='store_true',
                     help='Check UNSAT proof; default=False')
 parser.add_argument('--show-chain', action='store_true',
@@ -132,6 +138,8 @@ parser.add_argument('--version', action='store_true',
                     help='Show current CERES version; default=False')
 parser.add_argument('--asn1parse', action='store_true',
                     help='Only parse the input certificates; default=False')
+parser.add_argument('--quick-semantic-check-sc', action='store_true',
+                    help='Quick semantic check (no SMT solver) for a single certificate; default=False')
 args = parser.parse_args()
 
 input_chain = args.input
@@ -143,11 +151,12 @@ input_only_smt = args.check_spec
 temp_parser = args.dsl_parser
 show_version = args.version
 asn1parse = args.asn1parse
+quickSemChkCert = args.quick_semantic_check_sc
 
 if input_chain == None:
     if show_version:
         print(current_version)
-    if input_only_smt: # check specification consistency
+    if input_only_smt:  # check specification consistency
         print("Checking specification consistency ...")
         try:
             chain_len = int(input("Enter symbolic certificate chain length:"))
@@ -253,21 +262,27 @@ if not asn1parse:
             cert_list_parsed_new.append(element)
 
     for i in range(0, len(cert_list_parsed_new)):
-        errors, result, unsat_core, proof_check_status = semantic_mod(cert_list_parsed_new[i], input_dsl_parser, input_lfsc,
-                                                                      input_purposes,
-                                                                      ca_store_certs,
-                                                                      ca_store_certs_sizes, input_only_smt, -1)
-        try:
-            assert len(errors) == 0 and result == "sat"
-            print("Certificate chain verification : OK")
-            break
-        except AssertionError:
-            if i == len(cert_list_parsed_new) - 1:
-                print("Certificate chain verification : Falied (Semantic Error)")
-                if len(errors) > 0:
-                    print(";".join(errors))
+        if quickSemChkCert:
+            for cert in cert_list_parsed_new[i]:
+                result = semantic_quick.check(cert)
+                print(result)
+        else:
+            errors, result, unsat_core, proof_check_status = semantic_mod(cert_list_parsed_new[i], input_dsl_parser,
+                                                                          input_lfsc,
+                                                                          input_purposes,
+                                                                          ca_store_certs,
+                                                                          ca_store_certs_sizes, input_only_smt, -1)
+            try:
+                assert len(errors) == 0 and result == "sat"
+                print("Certificate chain verification : OK")
+                break
+            except AssertionError:
+                if i == len(cert_list_parsed_new) - 1:
+                    print("Certificate chain verification : Falied (Semantic Error)")
+                    if len(errors) > 0:
+                        print(";".join(errors))
+                    else:
+                        print("UNSAT-core : {}; Proof-check-status : {}".format(unsat_core, proof_check_status))
                 else:
-                    print("UNSAT-core : {}; Proof-check-status : {}".format(unsat_core, proof_check_status))
-            else:
-                pass
-                continue
+                    pass
+                    continue
