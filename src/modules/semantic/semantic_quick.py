@@ -1,6 +1,11 @@
+import os
 from datetime import datetime
+from subprocess import Popen, PIPE
 
 from modules.x509_ds import GenericTime
+
+home = os.path.expanduser('~')
+extra_location = "{}/.ceres/extras".format(home)
 
 
 def Implies(p, q):
@@ -68,6 +73,44 @@ def time_check(x, y):
     return m1
 
 
+def check_name_string(name):
+    for rdnset in name.List:
+        if rdnset != None:
+            for attbt in rdnset.List:
+                valtype = attbt.Value.Type
+                flag = call_stringprep(attbt.Value.Value, valtype)
+                if not flag:
+                    return False
+    return True
+
+
+# call LDAP
+def call_stringprep(Value, ValType):
+    try:
+        if ValType == 30:  # bmpstring
+            Value = bytes(Value).decode('utf-16-be')
+        elif ValType == 19:  # printablestring
+            Value = bytes(Value).decode('us-ascii')
+        elif ValType == 12:  # UTF8String
+            Value = bytes(Value).decode('utf-8')
+        elif ValType == 28:  # universalstring
+            Value = bytes(Value).decode('utf-32-be')
+        elif ValType == 20:  # teletexstring
+            Value = bytes(Value).decode('iso-8859-1')
+    except:
+        return False
+
+    stringprep = Popen(
+        ["{}/stringprep/runStringPrep".format(extra_location), Value],
+        stdout=PIPE)
+    (output, err) = stringprep.communicate()
+    stringprep.wait()
+    Value = output[1:len(output) - 2]
+    if Value == b'ERROR!!':
+        return False
+    return True
+
+
 def check(cert):
     result = "Success : No semantic failure"
 
@@ -75,8 +118,8 @@ def check(cert):
     version = getVersion(cert)
     serial = getSerial(cert)
     tbsSignAlgo = getTbsSignAlgo(cert)
-    # issuer = getIssuer(cert)
-    # subject = getSubject(cert)
+    issuer = getIssuer(cert)
+    subject = getSubject(cert)
     validity = getValidity(cert)
     extensions = getExtensions(cert)
 
@@ -105,6 +148,10 @@ def check(cert):
         nb_le_cur = time_check(validity.NotBefore, curtime)
         cur_le_na = time_check(curtime, validity.NotAfter)
         Assert(nb_le_cur and cur_le_na, "Incorrect certificate validity")
+
+        ## check string characters
+        Assert(check_name_string(issuer), "Issuer Name has invalid characters")
+        Assert(check_name_string(subject), "Subject Name has invalid characters")
     except Exception as e:
         result = "Failure : semantic error; reason - " + str(e)
         pass
