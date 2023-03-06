@@ -111,8 +111,8 @@ cd src/modules/parsers/dsl_based/grammar/
 ```
 
 ## Datasets
-The certificate datasets used for the paper is publicly available [here](https://iowa-my.sharepoint.com/:f:/g/personal/jdebnth_uiowa_edu/EsG5_z2F3shNtqjGlhZZeKMBKK-dK3d26R58SpIvcBdfgA?e=SUgHEX). 
-Please, email at <joyanta-debnath@uiowa.edu> if the link doesn't work.
+The certificate datasets used for the paper is publicly available [here](https://stonybrook365-my.sharepoint.com/:f:/g/personal/joyanta_debnath_stonybrook_edu/Esa7AR1nrghFtKCTw_w2xDkBegFDqJ48SkxAsYBVsb79UQ?e=eiI5Am). 
+Please, email at <joyanta.debnath@stonybrook.edu> if the link doesn't work.
 
 ## Known Setup Issues
 * LFSC proof checker requires  `>= GLIBCXX_3.4.26`. If its missing, following commands can be issued to update `GLIBCXX`.
@@ -165,7 +165,7 @@ Please, use the following *bibtex* for citing this work.
 
 ## Contributors
 Please, feel free to contact one of us if you have any questions.
-* [Joyanta Debnath](https://homepage.cs.uiowa.edu/~jdebnth/)
-* [Omar Chowdhury](https://homepage.divms.uiowa.edu/~comarhaider/)
+* [Joyanta Debnath](https://www3.cs.stonybrook.edu/~jdebnath/)
+* [Omar Chowdhury](https://www3.cs.stonybrook.edu/~omar/)
 * [Sze Yiu Chau](https://szeyiuchau.github.io/)
 
