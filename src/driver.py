@@ -95,11 +95,11 @@ def parser_mod(cert_list_decoded, dsl_parser, show_chain):
 
 ################################ semantic module ###################################
 def semantic_mod(cert_list_parsed, dsl_parser, lfsc, purposes, ca_store, ca_store_sizes, only_smt, chain_len_sym):
-    errors = semantic.generate_smtlib_formulas(cert_list_parsed, dsl_parser, lfsc, purposes, ca_store, ca_store_sizes,
+    errors, postfix = semantic.generate_smtlib_formulas(cert_list_parsed, dsl_parser, lfsc, purposes, ca_store, ca_store_sizes,
                                                only_smt, chain_len_sym)
     if len(errors) > 0:
         return errors, None, None, None
-    return semantic.call_smt_solver(lfsc)
+    return semantic.call_smt_solver(lfsc, postfix)
 
 
 def handle_spec_consistency_check(chain_len):
