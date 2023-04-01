@@ -13,6 +13,8 @@ from pysmt.shortcuts import *
 from pysmt.smtlib.script import *
 from pysmt.solvers.solver import *
 
+import time
+
 home = os.path.expanduser('~')
 extra_location = "{}/.ceres/extras".format(home)
 errors = []
@@ -31,15 +33,15 @@ chain_rawcert_smts = []
 only_smt_global = None
 
 
-def call_smt_solver(lfsc):
+def call_smt_solver(lfsc, postfix):
     solverLoc = '{}/CVC4/cvc4'.format(extra_location)
     proofcheckerLoc = '{}/LFSC/lfscc'.format(extra_location)
     proofCheckerTheories = '{}/LFSC/sat.plf {}/LFSC/smt.plf {}/LFSC/th_int.plf {}/LFSC/th_real.plf {}/LFSC/th_lira.plf  {}/LFSC/th_base.plf {}/LFSC/th_arrays.plf {}/LFSC/th_bv.plf {}/LFSC/th_bv_bitblast.plf'.format(
         extra_location, extra_location, extra_location, extra_location, extra_location, extra_location, extra_location, extra_location,
         extra_location)
-    proofIn = '{}/LFSC/proof.plf'.format(extra_location)
-    solverIn = '{}/CVC4/temp.smt2'.format(extra_location)
-    solverOut = '{}/CVC4/result.txt'.format(extra_location)
+    proofIn = '{}/LFSC/proof_{}.plf'.format(extra_location, postfix)
+    solverIn = '{}/CVC4/temp_{}.smt2'.format(extra_location, postfix)
+    solverOut = '{}/CVC4/result_{}.txt'.format(extra_location, postfix)
 
     # generate result, unsat-core and proof using solver
     os.system('{} {} > {}'.format(solverLoc, solverIn, solverOut))
@@ -144,11 +146,13 @@ def generate_smtlib_formulas(cert_list, dsl_parser, lfsc, purposes, ca_store, ca
         start = start + '(set-option :produce-proofs true)\n'
     smtlib_out = start + smtlib_init + "\n".join(all_formulas_asserts) + end
 
-    f = open('{}/CVC4/temp.smt2'.format(extra_location), 'w')
+    postfix = time.time()
+
+    f = open('{}/CVC4/temp_{}.smt2'.format(extra_location, postfix), 'w')
     f.write(smtlib_out)
     f.close()
 
-    return errors
+    return errors, postfix
 
 
 ## declare smt symbols
