@@ -13,7 +13,7 @@ from pysmt.shortcuts import *
 from pysmt.smtlib.script import *
 from pysmt.solvers.solver import *
 
-import time
+import random
 
 home = os.path.expanduser('~')
 extra_location = "{}/.ceres/extras".format(home)
@@ -146,7 +146,7 @@ def generate_smtlib_formulas(cert_list, dsl_parser, lfsc, purposes, ca_store, ca
         start = start + '(set-option :produce-proofs true)\n'
     smtlib_out = start + smtlib_init + "\n".join(all_formulas_asserts) + end
 
-    postfix = time.time()
+    postfix = random.random()
 
     f = open('{}/CVC4/temp_{}.smt2'.format(extra_location, postfix), 'w')
     f.write(smtlib_out)
