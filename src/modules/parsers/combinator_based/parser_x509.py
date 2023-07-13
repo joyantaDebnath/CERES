@@ -494,7 +494,7 @@ def key_usage():
     fields = yield count(any_byte, size2 - 1)
     s = 1 + s1 + 1 + s2 + size2
 
-    if (size1 != 1 + s2 + size2) or padding != get_ku_padding_count(fields) or size1 <= 0 or size2 <= 0:
+    if (size1 != 1 + s2 + size2) or padding > get_ku_padding_count(fields) or size1 <= 0 or size2 <= 0:
         raise ParseError("not proper length", "", -1)
     pop_parsers()
     return s, Key_usage(map_ku(fields))

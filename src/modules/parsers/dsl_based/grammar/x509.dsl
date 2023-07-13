@@ -368,7 +368,7 @@ Kubitswithpadding(VAL_Length) ::= Padding Kubits(VAL_Length - 1)
 	VAL_Kubitswithpadding <- Func_array_to_bytes_dsl(VAL_Kubits)
 	VAL_Kubitswithpadding <- Func_map_ku(VAL_Kubitswithpadding)
 	PRECONDRET  : VAL_Length > 0
-	POSTCOND : VAL_Padding = Func_get_ku_padding_count_dsl(VAL_Kubits)}
+	POSTCOND : VAL_Padding <= Func_get_ku_padding_count_dsl(VAL_Kubits)}
 
 Kubits(VAL_Length) ::= Bytee Kubits(VAL_Length - 1)
     { SIZE_Kubits <- SIZE_Bytee + SIZE_Kubits

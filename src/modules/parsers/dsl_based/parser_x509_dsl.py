@@ -4932,7 +4932,7 @@ def Kubitswithpadding(VAL_Length, Begin):
             SIZE_Kubitswithpadding = SIZE_Padding + SIZE_Kubits
             VAL_Kubitswithpadding = array_to_bytes_dsl([VAL_Kubits])
             VAL_Kubitswithpadding = map_ku([VAL_Kubitswithpadding])
-            if not (VAL_Padding == get_ku_padding_count_dsl([VAL_Kubits])):
+            if not (VAL_Padding <= get_ku_padding_count_dsl([VAL_Kubits])):
                 return False, 0, None, Temp
             return True, SIZE_Kubitswithpadding, VAL_Kubitswithpadding, Begin
     return False, 0, None, Temp
