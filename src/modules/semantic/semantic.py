@@ -82,7 +82,15 @@ def call_smt_solver(lfsc, postfix):
                 proof_check_status = proof_res.decode("utf-8").__contains__('Proof checked successfully')
             except:
                 errors.append("LFSCC : Couldn't check proof succesfully")
-
+    
+    # clean up residual files
+    if os.path.exists(proofIn):
+        os.remove(proofIn)
+    if os.path.exists(solverIn):
+        os.remove(solverIn)
+    if os.path.exists(solverOut):
+        os.remove(solverOut)
+    
     return errors, result, unsat_core, proof_check_status
 
 
