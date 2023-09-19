@@ -12,6 +12,7 @@ from modules.semantic import semantic_quick
 
 current_version = "1.0-11_08_2021"
 
+sys.set_int_max_str_digits(10000)
 
 ################################ pre-processor module ############################
 def pre_process_chain_mod(path):
