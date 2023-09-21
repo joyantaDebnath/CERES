@@ -10,7 +10,7 @@ mkdir ~/.ceres/
 
 ## install pre-requisite packages
 sudo apt-get update
-sudo apt-get -y install python3 python3-pip ghc libghc-regex-compat-dev libghc-text-icu-dev
+sudo apt-get -y install python3.11 python3-pip ghc libghc-regex-compat-dev libghc-text-icu-dev
 pip3 install parsec
 pip3 install pyinstaller
 pip3 install pysmt
